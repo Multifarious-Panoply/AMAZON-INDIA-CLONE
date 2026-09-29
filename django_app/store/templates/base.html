@@ -1,0 +1,169 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Amazon India Clone{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+<header class="topbar">
+
+    <div class="nav-logo">
+        <a href="{% url 'home' %}">
+            amazon<span>.in</span>
+        </a>
+    </div>
+
+    <div class="nav-location">
+        <small>Deliver to</small>
+        <strong>India</strong>
+    </div>
+
+    <form class="search-box" action="{% url 'products' %}" method="get">
+        <input
+            type="text"
+            name="q"
+            placeholder="Search Amazon.in"
+            value="{{ request.GET.q|default:'' }}"
+        >
+        <button type="submit">🔍</button>
+    </form>
+
+    <div class="nav-language">
+        <strong>EN</strong>
+    </div>
+
+    <div class="nav-account">
+        {% if user.is_authenticated %}
+            <small>Hello, {{ user.username }}</small>
+            <a href="{% url 'orders' %}">Orders</a>
+        {% else %}
+            <small>Hello, sign in</small>
+            <a href="{% url 'login' %}">Account & Lists</a>
+        {% endif %}
+    </div>
+
+    <div class="nav-orders">
+        <small>Returns</small>
+        <strong>& Orders</strong>
+    </div>
+
+    <a class="nav-cart" href="{% url 'cart' %}">
+        🛒 <strong>Cart</strong>
+    </a>
+
+</header>
+
+
+<nav class="category-bar">
+
+    <a href="{% url 'products' %}">☰ All</a>
+
+    <a href="{% url 'products' %}?category=Electronics">
+        Electronics
+    </a>
+
+    <a href="{% url 'products' %}?category=Mobiles">
+        Mobiles
+    </a>
+
+    <a href="{% url 'products' %}?category=Computers">
+        Computers
+    </a>
+
+    <a href="{% url 'products' %}?category=Fashion">
+        Fashion
+    </a>
+
+    <a href="{% url 'products' %}?category=Home">
+        Home
+    </a>
+
+    <a href="{% url 'products' %}?category=Books">
+        Books
+    </a>
+
+    <a href="{% url 'products' %}?category=Beauty">
+        Beauty
+    </a>
+
+    {% if user.is_authenticated %}
+        <form action="{% url 'logout' %}" method="post" class="logout-form">
+            {% csrf_token %}
+            <button type="submit">Sign Out</button>
+        </form>
+    {% else %}
+        <a href="{% url 'register' %}">Create Account</a>
+    {% endif %}
+
+</nav>
+
+
+{% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+            <div class="message {{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+
+<main>
+    {% block content %}
+    {% endblock %}
+</main>
+
+
+<footer class="footer">
+
+    <div class="footer-top">
+        <a href="#">Back to top</a>
+    </div>
+
+    <div class="footer-main">
+
+        <div>
+            <h3>Get to Know Us</h3>
+            <p>About Us</p>
+            <p>Careers</p>
+            <p>Press Releases</p>
+        </div>
+
+        <div>
+            <h3>Connect with Us</h3>
+            <p>Facebook</p>
+            <p>Twitter</p>
+            <p>Instagram</p>
+        </div>
+
+        <div>
+            <h3>Make Money with Us</h3>
+            <p>Sell on Amazon</p>
+            <p>Protect and Build Your Brand</p>
+        </div>
+
+        <div>
+            <h3>Let Us Help You</h3>
+            <p>Your Account</p>
+            <p>Returns Centre</p>
+            <p>Help</p>
+        </div>
+
+    </div>
+
+    <div class="footer-bottom">
+        Amazon India Clone — Semester 3 Django Project
+    </div>
+
+</footer>
+
+<script src="{% static 'js/main.js' %}"></script>
+
+</body>
+</html>

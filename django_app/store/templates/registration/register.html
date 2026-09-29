@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}Create Account — Amazon India Clone{% endblock %}
+
+{% block content %}
+
+<div class="auth-page">
+
+    <div class="auth-box">
+
+        <div class="auth-logo">
+            amazon<span>.in</span>
+        </div>
+
+        <h1>Create account</h1>
+
+        <form method="post">
+
+            {% csrf_token %}
+
+            {{ form.non_field_errors }}
+
+            <label for="id_username">
+                Username
+            </label>
+
+            {{ form.username }}
+
+            {% if form.username.errors %}
+                <div class="form-error">
+                    {{ form.username.errors }}
+                </div>
+            {% endif %}
+
+            <label for="id_password1">
+                Password
+            </label>
+
+            {{ form.password1 }}
+
+            {% if form.password1.errors %}
+                <div class="form-error">
+                    {{ form.password1.errors }}
+                </div>
+            {% endif %}
+
+            <label for="id_password2">
+                Confirm password
+            </label>
+
+            {{ form.password2 }}
+
+            {% if form.password2.errors %}
+                <div class="form-error">
+                    {{ form.password2.errors }}
+                </div>
+            {% endif %}
+
+            <button type="submit" class="auth-btn">
+                Create account
+            </button>
+
+        </form>
+
+        <p class="auth-help">
+            Already have an account?
+            <a href="{% url 'login' %}">Sign in</a>
+        </p>
+
+    </div>
+
+</div>
+
+{% endblock %}

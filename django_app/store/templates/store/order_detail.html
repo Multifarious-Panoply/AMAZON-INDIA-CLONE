@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}Order #{{ order.id }} — Amazon India Clone{% endblock %}
+
+{% block content %}
+
+<div class="page-container">
+
+    <div class="page-heading-row">
+
+        <div>
+            <h1>Order #{{ order.id }}</h1>
+            <p>
+                Placed on
+                {{ order.created_at|date:"d M Y, h:i A" }}
+            </p>
+        </div>
+
+        <span class="order-status">
+            {{ order.status }}
+        </span>
+
+    </div>
+
+
+    <div class="order-detail-layout">
+
+        <section class="checkout-card">
+
+            <h2>Order Items</h2>
+
+            {% for item in order.items.all %}
+
+            <div class="checkout-item">
+
+                {% if item.product %}
+                    <img
+                        src="{{ item.product.image }}"
+                        alt="{{ item.product.name }}"
+                    >
+
+                    <div>
+                        <h3>{{ item.product.name }}</h3>
+                        <p>Quantity: {{ item.quantity }}</p>
+                        <p>Price: ₹{{ item.price }}</p>
+                        <strong>
+                            Subtotal: ₹{{ item.subtotal }}
+                        </strong>
+                    </div>
+                {% else %}
+                    <div>
+                        <p>Product no longer available.</p>
+                    </div>
+                {% endif %}
+
+            </div>
+
+            {% endfor %}
+
+        </section>
+
+
+        <aside class="order-summary">
+
+            <h2>Order Details</h2>
+
+            <p>
+                <strong>Payment:</strong><br>
+                {{ order.get_payment_method_display }}
+            </p>
+
+            <p>
+                <strong>Delivery Address:</strong><br>
+                {{ order.full_name }}<br>
+                {{ order.address }}<br>
+                {{ order.city }}, {{ order.state }}<br>
+                {{ order.pincode }}
+            </p>
+
+            <hr>
+
+            <div class="summary-total">
+                <span>Total</span>
+                <strong>₹{{ order.total }}</strong>
+            </div>
+
+        </aside>
+
+    </div>
+
+</div>
+
+{% endblock %}

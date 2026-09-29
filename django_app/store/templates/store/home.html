@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+
+{% block title %}Amazon.in Clone — Online Shopping{% endblock %}
+
+{% block content %}
+
+<section class="hero">
+
+    <div class="hero-slide active">
+        <div>
+            <p class="hero-small">Great deals. Everyday value.</p>
+            <h1>Everything you need,<br>all in one place.</h1>
+            <a href="{% url 'products' %}" class="hero-btn">
+                Shop Now
+            </a>
+        </div>
+    </div>
+
+    <div class="hero-slide">
+        <div>
+            <p class="hero-small">Upgrade your technology</p>
+            <h1>Latest electronics<br>at great prices.</h1>
+            <a href="{% url 'products' %}?category=Electronics" class="hero-btn">
+                Explore Electronics
+            </a>
+        </div>
+    </div>
+
+    <div class="hero-slide">
+        <div>
+            <p class="hero-small">Style for every occasion</p>
+            <h1>Fashion picks<br>you'll love.</h1>
+            <a href="{% url 'products' %}?category=Fashion" class="hero-btn">
+                Shop Fashion
+            </a>
+        </div>
+    </div>
+
+    <button class="hero-arrow hero-prev" onclick="changeSlide(-1)">
+        ❮
+    </button>
+
+    <button class="hero-arrow hero-next" onclick="changeSlide(1)">
+        ❯
+    </button>
+
+</section>
+
+
+<section class="category-section">
+
+    <div class="section-heading">
+        <h2>Shop by Category</h2>
+        <a href="{% url 'products' %}">See all</a>
+    </div>
+
+    <div class="category-grid">
+
+        {% for category, label in categories %}
+
+        <a
+            href="{% url 'products' %}?category={{ category }}"
+            class="category-card"
+        >
+            <div class="category-icon">
+                {% if category == "Electronics" %}
+                    💻
+                {% elif category == "Mobiles" %}
+                    📱
+                {% elif category == "Computers" %}
+                    🖥️
+                {% elif category == "Fashion" %}
+                    👕
+                {% elif category == "Home" %}
+                    🏠
+                {% elif category == "Books" %}
+                    📚
+                {% else %}
+                    💄
+                {% endif %}
+            </div>
+
+            <h3>{{ label }}</h3>
+            <span>Explore →</span>
+        </a>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+
+<section class="product-section">
+
+    <div class="section-heading">
+        <h2>Today's Deals</h2>
+        <a href="{% url 'products' %}">See all deals</a>
+    </div>
+
+    <div class="product-row">
+
+        {% for product in deals %}
+
+        <article class="product-card">
+
+            <a href="{% url 'product_detail' product.id %}">
+                <div class="product-image">
+                    <img src="{{ product.image }}" alt="{{ product.name }}">
+                </div>
+            </a>
+
+            {% if product.badge %}
+                <span class="deal-badge">
+                    {{ product.badge }}
+                </span>
+            {% endif %}
+
+            <h3>
+                <a href="{% url 'product_detail' product.id %}">
+                    {{ product.name }}
+                </a>
+            </h3>
+
+            <div class="rating">
+                ★ {{ product.rating }}
+                <span>({{ product.reviews }})</span>
+            </div>
+
+            <div class="price">
+                ₹{{ product.price }}
+            </div>
+
+            {% if product.old_price %}
+                <div class="old-price">
+                    M.R.P.:
+                    <s>₹{{ product.old_price }}</s>
+                    <span>{{ product.discount_percent }}% off</span>
+                </div>
+            {% endif %}
+
+            <form action="{% url 'add_to_cart' product.id %}" method="post">
+                {% csrf_token %}
+                <button class="add-cart-btn" type="submit">
+                    Add to Cart
+                </button>
+            </form>
+
+        </article>
+
+        {% empty %}
+
+        <div class="empty-state">
+            <h3>No deals available yet.</h3>
+            <p>Run the seed command later to add demo products.</p>
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+
+<section class="product-section">
+
+    <div class="section-heading">
+        <h2>Recommended Products</h2>
+        <a href="{% url 'products' %}">Explore all</a>
+    </div>
+
+    <div class="product-row">
+
+        {% for product in products %}
+
+        <article class="product-card">
+
+            <a href="{% url 'product_detail' product.id %}">
+                <div class="product-image">
+                    <img src="{{ product.image }}" alt="{{ product.name }}">
+                </div>
+            </a>
+
+            <h3>
+                <a href="{% url 'product_detail' product.id %}">
+                    {{ product.name }}
+                </a>
+            </h3>
+
+            <div class="rating">
+                ★ {{ product.rating }}
+                <span>({{ product.reviews }})</span>
+            </div>
+
+            <div class="price">
+                ₹{{ product.price }}
+            </div>
+
+            <form action="{% url 'add_to_cart' product.id %}" method="post">
+                {% csrf_token %}
+                <button class="add-cart-btn" type="submit">
+                    Add to Cart
+                </button>
+            </form>
+
+        </article>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+{% endblock %}

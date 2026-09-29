@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+
+{% block title %}Products — Amazon India Clone{% endblock %}
+
+{% block content %}
+
+<div class="page-container">
+
+    <div class="listing-header">
+        <div>
+            <h1>
+                {% if selected_category %}
+                    {{ selected_category }}
+                {% elif query %}
+                    Search results for "{{ query }}"
+                {% else %}
+                    All Products
+                {% endif %}
+            </h1>
+
+            <p>{{ products|length }} products</p>
+        </div>
+
+        <form method="get" class="sort-form">
+
+            {% if query %}
+                <input type="hidden" name="q" value="{{ query }}">
+            {% endif %}
+
+            {% if selected_category %}
+                <input
+                    type="hidden"
+                    name="category"
+                    value="{{ selected_category }}"
+                >
+            {% endif %}
+
+            <label for="sort">Sort by:</label>
+
+            <select name="sort" id="sort" onchange="this.form.submit()">
+                <option value="">Featured</option>
+                <option
+                    value="price_low"
+                    {% if selected_sort == "price_low" %}selected{% endif %}
+                >
+                    Price: Low to High
+                </option>
+                <option
+                    value="price_high"
+                    {% if selected_sort == "price_high" %}selected{% endif %}
+                >
+                    Price: High to Low
+                </option>
+                <option
+                    value="rating"
+                    {% if selected_sort == "rating" %}selected{% endif %}
+                >
+                    Avg. Customer Rating
+                </option>
+            </select>
+
+        </form>
+    </div>
+
+
+    <div class="listing-layout">
+
+        <aside class="filter-sidebar">
+
+            <h3>Department</h3>
+
+            {% for category, label in categories %}
+                <a
+                    href="{% url 'products' %}?category={{ category }}"
+                    class="{% if selected_category == category %}active-filter{% endif %}"
+                >
+                    {{ label }}
+                </a>
+            {% endfor %}
+
+            <a href="{% url 'products' %}">Clear Filters</a>
+
+        </aside>
+
+
+        <section class="product-grid">
+
+            {% for product in products %}
+
+            <article class="product-card">
+
+                <a href="{% url 'product_detail' product.id %}">
+                    <div class="product-image">
+                        <img
+                            src="{{ product.image }}"
+                            alt="{{ product.name }}"
+                        >
+                    </div>
+                </a>
+
+                {% if product.badge %}
+                    <span class="deal-badge">
+                        {{ product.badge }}
+                    </span>
+                {% endif %}
+
+                <h3>
+                    <a href="{% url 'product_detail' product.id %}">
+                        {{ product.name }}
+                    </a>
+                </h3>
+
+                <div class="rating">
+                    ★ {{ product.rating }}
+                    <span>({{ product.reviews }})</span>
+                </div>
+
+                <div class="price">
+                    ₹{{ product.price }}
+                </div>
+
+                {% if product.old_price %}
+                    <div class="old-price">
+                        M.R.P.
+                        <s>₹{{ product.old_price }}</s>
+                        <span>{{ product.discount_percent }}% off</span>
+                    </div>
+                {% endif %}
+
+                {% if product.stock > 0 %}
+                    <p class="stock">
+                        In stock
+                    </p>
+                {% else %}
+                    <p class="out-stock">
+                        Currently unavailable
+                    </p>
+                {% endif %}
+
+                <form action="{% url 'add_to_cart' product.id %}" method="post">
+                    {% csrf_token %}
+                    <button
+                        class="add-cart-btn"
+                        type="submit"
+                        {% if product.stock == 0 %}disabled{% endif %}
+                    >
+                        Add to Cart
+                    </button>
+                </form>
+
+            </article>
+
+            {% empty %}
+
+            <div class="empty-state">
+                <h2>No products found</h2>
+                <p>Try another search or category.</p>
+                <a href="{% url 'products' %}" class="primary-btn">
+                    View all products
+                </a>
+            </div>
+
+            {% endfor %}
+
+        </section>
+
+    </div>
+
+</div>
+
+{% endblock %}

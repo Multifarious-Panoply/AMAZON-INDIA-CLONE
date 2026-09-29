@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block title %}Your Orders — Amazon India Clone{% endblock %}
+
+{% block content %}
+
+<div class="page-container">
+
+    <div class="page-heading-row">
+        <div>
+            <h1>Your Orders</h1>
+            <p>View your previous orders and order details.</p>
+        </div>
+
+        <a
+            href="{% url 'products' %}"
+            class="primary-btn"
+        >
+            Continue Shopping
+        </a>
+    </div>
+
+
+    {% if orders %}
+
+        <div class="orders-list">
+
+            {% for order in orders %}
+
+            <article class="order-card">
+
+                <div class="order-header">
+
+                    <div>
+                        <small>ORDER PLACED</small>
+                        <strong>
+                            {{ order.created_at|date:"d M Y" }}
+                        </strong>
+                    </div>
+
+                    <div>
+                        <small>TOTAL</small>
+                        <strong>₹{{ order.total }}</strong>
+                    </div>
+
+                    <div>
+                        <small>ORDER #</small>
+                        <strong>{{ order.id }}</strong>
+                    </div>
+
+                </div>
+
+
+                <div class="order-body">
+
+                    <div>
+                        <span class="order-status">
+                            {{ order.status }}
+                        </span>
+
+                        <p>
+                            Payment:
+                            {{ order.get_payment_method_display }}
+                        </p>
+
+                        <p>
+                            Delivery:
+                            {{ order.city }}, {{ order.state }}
+                            - {{ order.pincode }}
+                        </p>
+                    </div>
+
+                    <a
+                        href="{% url 'order_detail' order.id %}"
+                        class="secondary-btn"
+                    >
+                        View Order Details
+                    </a>
+
+                </div>
+
+            </article>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="empty-state">
+
+            <h2>You haven't placed any orders yet.</h2>
+
+            <p>
+                Once you place an order, it will appear here.
+            </p>
+
+            <a
+                href="{% url 'products' %}"
+                class="primary-btn"
+            >
+                Start Shopping
+            </a>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}
