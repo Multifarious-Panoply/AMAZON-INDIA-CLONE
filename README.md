@@ -15,6 +15,8 @@
 
 **AMAZON INDIA — E-COMMERCE CLONE** is a deliberately scoped, locally runnable e-commerce web application developed with **Django, SQLite, HTML, CSS, and JavaScript**.
 
+This project is just a part of an assignment under my University Course.
+
 The project attempts to recreate the **interaction patterns and visual grammar of a contemporary e-commerce platform** while retaining an intentionally modest architectural footprint suitable for an undergraduate Web Development project.
 
 Rather than pursuing needless infrastructural complexity, the application concentrates on the fundamentals that constitute a convincing commerce experience:
